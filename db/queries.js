@@ -2,37 +2,7 @@
 const { prisma } = require('../lib/prisma.js') //CJS format
 
 /*
-async function main() {
-  // Create a new user with a post
-  const user = await prisma.user.create({
-    data: {
-      name: 'Alice',
-      username: 'alice@prisma.io',
-      password: '12349876',
-      posts: {
-        create: {
-          title: 'Hello World',
-          content: 'This is my first post!',
-          published: true,
-        },
-      },
-    },
-    include: {
-      posts: true,
-    },
-  })
-  console.log('Created user:', user)
-
-  // Fetch all users with their posts
-  const allUsers = await prisma.user.findMany({
-    include: {
-      posts: true,
-    },
-  })
-  console.log('All users:', JSON.stringify(allUsers, null, 2))
-}
-
-main()
+findUsername()
   .then(async () => {
     await prisma.$disconnect()
   })
