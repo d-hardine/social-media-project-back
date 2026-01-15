@@ -17,7 +17,6 @@
     "url": "https://github.com/d-hardine/social-media-project-back/issues"
   },
   "homepage": "https://github.com/d-hardine/social-media-project-back#readme",
-  "type": "module",
   "description": "",
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
