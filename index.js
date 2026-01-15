@@ -3,7 +3,7 @@ const cors = require('cors')
 const socialRouter = require('./routes/socialRoute')
 
 // Load environment variables
-require('dotenv').config();
+require('dotenv').config()
 
 //express initialization
 const app = express()

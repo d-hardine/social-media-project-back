@@ -14,18 +14,18 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  username String  @unique
-  name     String?
-  password String
+  id       String @id @default(uuid())
+  username String @unique @db.VarChar(50)
+  name     String @db.VarChar(50)
+  password String @db.VarChar(50)
   posts    Post[]
 }
 
 model Post {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(uuid())
   title     String
   content   String?
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String
 }

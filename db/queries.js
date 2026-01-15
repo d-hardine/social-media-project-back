@@ -1,5 +1,7 @@
-import { prisma } from '../lib/prisma.js'
+//import { prisma } from '../lib/prisma.js' //ESM format
+const { prisma } = require('../lib/prisma.js') //CJS format
 
+/*
 async function main() {
   // Create a new user with a post
   const user = await prisma.user.create({
@@ -39,3 +41,17 @@ main()
     await prisma.$disconnect()
     process.exit(1)
   })
+*/
+
+async function createNewUser(username, displayName, password) {
+  const user = await prisma.user.create({
+    data: {
+      name: displayName,
+      username: username,
+      password: password
+    }
+  })
+  console.log(user)
+}
+
+module.exports = { createNewUser }
