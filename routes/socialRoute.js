@@ -1,9 +1,8 @@
 const { Router } = require('express')
+const socialController = require('../controllers/socialController')
 
 const socialRouter = Router()
 
-socialRouter.get('/test', (req, res) => {
-    res.send('connection established')
-})
+socialRouter.post('/signup', socialController.signUpPost)
 
 module.exports = socialRouter
