@@ -10,4 +10,16 @@ const signUpPost = async (req, res) => {
 
 const loginPost = passport.authenticate('local', {failureRedirect: '/', failureMessage: true}) //handled by passport library
 
-module.exports = { signUpPost, loginPost}
+const loginPostSuccess = (req, res) => {
+  res.status(201).json(req.user)
+}
+
+const authenticationGet = async (req, res) => {
+  if(req.isAuthenticated()) {
+    res.status(201).json(req.user)
+  } else {
+    res.status(401).json({message: 'user is not authenticated jancok i'})
+  }
+}
+
+module.exports = { signUpPost, loginPost, loginPostSuccess, authenticationGet }

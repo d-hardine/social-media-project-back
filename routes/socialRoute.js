@@ -4,7 +4,8 @@ const passport = require('passport')
 
 const socialRouter = Router()
 
+socialRouter.get('/auth', socialController.authenticationGet)
 socialRouter.post('/signup', socialController.signUpPost)
-socialRouter.post('/login', socialController.loginPost, (req, res) => {res.status(201).json({message: "inputted data for sign up OK"});})
+socialRouter.post('/login', socialController.loginPost, socialController.loginPostSuccess)
 
 module.exports = socialRouter

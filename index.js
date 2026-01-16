@@ -12,8 +12,15 @@ require('dotenv').config()
 //express initialization
 const app = express()
 
-//cors enabled
-app.use(cors())
+//cors setting
+const corsOptions = {
+  origin: 'http://localhost:3000', // Replace with your React app's URL
+  credentials: true, // This allows the browser to send/receive cookies
+  optionsSuccessStatus: 200,
+};
+
+//cors enabled accordance to setting
+app.use(cors(corsOptions))
 
 //access html body
 app.use(express.json())
@@ -25,17 +32,22 @@ const sessionStore = new pgSession({
   createTableIfMissing: true
 })
 
-//setting up session and save it to cookie
+//setting up session and store it to postgres db
 app.use(session({
   secret: 'el-poco-loco',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   store: sessionStore,
   cookie: {
-    maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 //equals 1 day    
+    maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24, //equals 1 day
+    httpOnly: true, //for security, prevents JS access
+    secure: false,
+    sameSite: 'lax',
   }
 }))
 
+//enable passport middleware to use session
+app.use(passport.initialize())
 app.use(passport.session())
 
 //routes middleware
