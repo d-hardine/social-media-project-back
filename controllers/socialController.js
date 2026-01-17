@@ -22,4 +22,21 @@ const authenticationGet = async (req, res) => {
   }
 }
 
-module.exports = { signUpPost, loginPost, loginPostSuccess, authenticationGet }
+const logoutPost = (req, res, next) => {
+  // Passport provides req.logout() to end a login session
+  req.logout((err) => {
+    if (err) {
+      return next(err); // Handle errors
+    }
+    // Optional: Destroy the session completely if using express-session
+    req.session.destroy((err) => {
+      if (err) {
+        return next(err);
+      }
+      // Send a response to the client
+      res.status(200).send('Logged out successfully');
+    });
+  });
+}
+
+module.exports = { signUpPost, loginPost, loginPostSuccess, authenticationGet, logoutPost }
