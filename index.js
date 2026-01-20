@@ -14,7 +14,7 @@ const app = express()
 
 //cors setting
 const corsOptions = {
-  origin: 'http://localhost:3000', // Replace with your React app's URL
+  origin: 'http://localhost:5173', // Replace with your React app's URL
   credentials: true, // This allows the browser to send/receive cookies
   optionsSuccessStatus: 200,
 };
@@ -41,7 +41,7 @@ app.use(session({
   cookie: {
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24, //equals 1 day
     httpOnly: true, //for security, prevents JS access
-    secure: false,
+    secure: false, //change to true in production
     sameSite: 'lax',
   }
 }))
@@ -53,7 +53,7 @@ app.use(passport.session())
 //routes middleware
 app.use('/api', socialRouter)
 
-// Need to require the entire Passport config module so app.js knows about it
+// Need to require the entire Passport library module so index.js knows about it
 require('./lib/passport');
 
 const PORT = 3000;

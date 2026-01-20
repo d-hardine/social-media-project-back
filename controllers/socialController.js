@@ -28,7 +28,7 @@ const logoutPost = (req, res, next) => {
     if (err) {
       return next(err); // Handle errors
     }
-    // Optional: Destroy the session completely if using express-session
+    // Destroy the session completely if using express-session
     req.session.destroy((err) => {
       if (err) {
         return next(err);
