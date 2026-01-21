@@ -8,4 +8,7 @@ socialRouter.post('/signup', socialController.signUpPost)
 socialRouter.post('/login', socialController.loginPost, socialController.loginPostSuccess)
 socialRouter.post('/logout', socialController.logoutPost)
 
+socialRouter.get('/all-posts', socialController.getAllPosts)
+socialRouter.post('/post', socialController.contentPost)
+
 module.exports = socialRouter

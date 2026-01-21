@@ -14,14 +14,30 @@ findUsername()
 */
 
 async function createNewUser(username, displayName, password) {
-  const user = await prisma.user.create({
+  return await prisma.user.create({
     data: {
       name: displayName,
       username: username,
       password: password
     }
   })
-  console.log(user)
 }
 
-module.exports = { createNewUser }
+async function postContent(newPost, userId) {
+  return await prisma.post.create({
+    data: {
+      authorId: userId,
+      content: newPost
+    }
+  })
+}
+
+async function retrieveAllPosts() {
+  return await prisma.post.findMany({
+    include: {
+      author: true
+    }
+  })
+}
+
+module.exports = { createNewUser, postContent, retrieveAllPosts }

@@ -29,7 +29,7 @@ app.use(express.urlencoded({extended: true}))
 //create session table inside postgres
 const sessionStore = new pgSession({
   pool: pool,
-  createTableIfMissing: true
+  createTableIfMissing: true //if you're using prisma, please make the session table at your schema yourself
 })
 
 //setting up session and store it to postgres db

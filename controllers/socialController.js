@@ -39,4 +39,15 @@ const logoutPost = (req, res, next) => {
   });
 }
 
-module.exports = { signUpPost, loginPost, loginPostSuccess, authenticationGet, logoutPost }
+const getAllPosts = async (req, res) => {
+  const allPosts = await db.retrieveAllPosts()
+  res.status(200).json({message: "All posts retrieved", allPosts})
+}
+
+const contentPost = async (req, res) => {
+  const newPost = req.body.post
+  await db.postContent(newPost, req.user.id)
+  res.status(200).json({message: "new post created"})
+}
+
+module.exports = { signUpPost, loginPost, loginPostSuccess, authenticationGet, logoutPost, getAllPosts, contentPost }

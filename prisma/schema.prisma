@@ -14,18 +14,28 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String @unique
-  name     String
-  password String
-  posts    Post[]
+  id        String   @id @default(uuid())
+  username  String   @unique
+  name      String
+  password  String
+  bio       String?
+  website   String?
+  createdAt DateTime @default(now())
+  posts     Post[]
 }
 
 model Post {
-  id        String  @id @default(uuid())
-  title     String
+  id        String   @id @default(uuid())
   content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+  createdAt DateTime @default(now())
+}
+
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
 }
