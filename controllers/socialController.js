@@ -12,7 +12,10 @@ const storage = multer.diskStorage({
         cb(null, fn)
     }
 })
-const upload = multer({ storage: storage })
+const upload = multer({
+  storage: storage,
+  limits: {fileSize: 1048576}
+})
 
 
 const signUpPost = async (req, res) => {
@@ -21,8 +24,8 @@ const signUpPost = async (req, res) => {
   res.status(201).json({message: "inputted data for sign up OK"})
 }
 
+//login middlewares
 const loginPost = passport.authenticate('local', {failureRedirect: '/', failureMessage: true}) //handled by passport library
-
 const loginPostSuccess = (req, res) => {
   res.status(201).json(req.user)
 }
@@ -63,12 +66,12 @@ const contentPost = async (req, res) => {
   res.status(200).json({message: "new post created"})
 }
 
-const uploadImagePost = upload.single('file')
+const uploadImagePost = upload.single('image')
 const uploadImagePostNext = async (req, res) => {
-  console.log(req)
-  const uploadToCloud = await cloudinary.uploader.upload(req.file.path)
-  console.log(uploadToCloud)
-  res.send('uploaded successfully')
+  const uploadToCloud = await cloudinary.uploader.upload(req.file.path) //upload to cloud
+  await db.updateUserImage(req.user.id, uploadToCloud.secure_url) //update the user profile picture to database
+  const updatedUser = await db.getUser(req.user.id) //retrieve the updated user info
+  res.status(200).json({message: 'uploaded successfully', updatedUser})
 }
 
 module.exports = {

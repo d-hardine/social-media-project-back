@@ -13,6 +13,12 @@ findUsername()
   })
 */
 
+async function getUser(userId) {
+  return await prisma.user.findUnique({
+    where: {id: userId}
+  })
+}
+
 async function createNewUser(username, displayName, password) {
   return await prisma.user.create({
     data: {
@@ -34,10 +40,18 @@ async function postContent(newPost, userId) {
 
 async function retrieveAllPosts() {
   return await prisma.post.findMany({
-    include: {
-      author: true
+    include: {author: true},
+    orderBy: {createdAt: 'desc'}
+  })
+}
+
+async function updateUserImage(userId, newImageUrl) {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {
+      profilePic: newImageUrl
     }
   })
 }
 
-module.exports = { createNewUser, postContent, retrieveAllPosts }
+module.exports = { getUser, createNewUser, postContent, retrieveAllPosts, updateUserImage }
