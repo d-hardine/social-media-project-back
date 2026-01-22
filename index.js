@@ -26,6 +26,9 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
+//initializing cloudinary
+require('./lib/cloudinary')
+
 //create session table inside postgres
 const sessionStore = new pgSession({
   pool: pool,
@@ -39,7 +42,7 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore,
   cookie: {
-    maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24, //equals 1 day
+    maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
     httpOnly: true, //for security, prevents JS access
     secure: false, //change to true in production
     sameSite: 'lax',

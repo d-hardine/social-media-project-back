@@ -1,6 +1,19 @@
 const bcrypt = require('bcryptjs')
 const db = require('../db/queries')
 const passport = require('passport')
+const cloudinary = require('cloudinary').v2
+
+//multer setup
+const path = require('node:path')
+const multer  = require('multer')
+const storage = multer.diskStorage({
+    filename: function (req, file, cb) {
+        let fn = file.originalname + ' - ' + Date.now() + path.extname(file.originalname)
+        cb(null, fn)
+    }
+})
+const upload = multer({ storage: storage })
+
 
 const signUpPost = async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -50,4 +63,22 @@ const contentPost = async (req, res) => {
   res.status(200).json({message: "new post created"})
 }
 
-module.exports = { signUpPost, loginPost, loginPostSuccess, authenticationGet, logoutPost, getAllPosts, contentPost }
+const uploadImagePost = upload.single('file')
+const uploadImagePostNext = async (req, res) => {
+  console.log(req)
+  const uploadToCloud = await cloudinary.uploader.upload(req.file.path)
+  console.log(uploadToCloud)
+  res.send('uploaded successfully')
+}
+
+module.exports = {
+  signUpPost,
+  loginPost,
+  loginPostSuccess,
+  authenticationGet,
+  logoutPost,
+  getAllPosts,
+  contentPost,
+  uploadImagePost,
+  uploadImagePostNext
+}

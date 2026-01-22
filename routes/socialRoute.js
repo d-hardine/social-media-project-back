@@ -11,4 +11,6 @@ socialRouter.post('/logout', socialController.logoutPost)
 socialRouter.get('/all-posts', socialController.getAllPosts)
 socialRouter.post('/post', socialController.contentPost)
 
+socialRouter.post('/upload-image', socialController.uploadImagePost, socialController.uploadImagePostNext)
+
 module.exports = socialRouter
