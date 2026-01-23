@@ -54,4 +54,22 @@ async function updateUserImage(userId, newImageUrl) {
   })
 }
 
-module.exports = { getUser, createNewUser, postContent, retrieveAllPosts, updateUserImage }
+async function updateUserBio(userId, newBio) {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {
+      bio: newBio
+    }
+  })  
+}
+
+async function updateUserWebsite(userId, newWebsite) {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {
+      website: newWebsite
+    }
+  })  
+}
+
+module.exports = { getUser, createNewUser, postContent, retrieveAllPosts, updateUserImage, updateUserBio, updateUserWebsite }

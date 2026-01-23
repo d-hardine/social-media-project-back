@@ -12,9 +12,23 @@ const storage = multer.diskStorage({
         cb(null, fn)
     }
 })
+const fileFilter = (req, file, cb) => { //filter that only image file that can be uploaded
+  // Check file types (mimetype) and extensions
+  const allowedTypes = /jpeg|jpg|png/;
+  const mimetype = allowedTypes.test(file.mimetype);
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (mimetype && extname) {
+    return cb(null, true); // Accept file
+  }
+  
+  // Reject file and pass an error message
+  cb(new Error('Only image files (JPEG, JPG, PNG) are allowed!'), false); 
+};
 const upload = multer({
   storage: storage,
-  limits: {fileSize: 1048576}
+  limits: {fileSize: 1048576}, // 1 MB
+  fileFilter: fileFilter
 })
 
 
@@ -66,10 +80,36 @@ const contentPost = async (req, res) => {
   res.status(200).json({message: "new post created"})
 }
 
-const uploadImagePost = upload.single('image')
-const uploadImagePostNext = async (req, res) => {
+//whole profile picture upload middleware 
+const uploadImagePut = upload.single('image')
+const uploadImagePutNext = async (req, res, next) => {
   const uploadToCloud = await cloudinary.uploader.upload(req.file.path) //upload to cloud
   await db.updateUserImage(req.user.id, uploadToCloud.secure_url) //update the user profile picture to database
+  const updatedUser = await db.getUser(req.user.id) //retrieve the updated user info
+  res.status(200).json({message: 'uploaded successfully', updatedUser})
+  next()
+}
+const uploadImagePutError = (error, req, res, next) => {
+// Handle Multer errors (e.g., file type error, file size error)
+  if (error instanceof multer.MulterError) {
+    return res.status(400).json({ message: `Multer error: ${error.message}` });
+  } else if (error) {
+    // Handle custom errors from fileFilter
+    return res.status(400).json({ message: error.message });
+  }
+  next();
+}
+
+const updateBioPut = async (req, res) => {
+  const { newBio } = req.body
+  await db.updateUserBio(req.user.id, newBio)
+  const updatedUser = await db.getUser(req.user.id) //retrieve the updated user info
+  res.status(200).json({message: 'uploaded successfully', updatedUser})
+}
+
+const updateWebsitePut = async (req, res) => {
+  const { newWebsite } = req.body
+  await db.updateUserWebsite(req.user.id, newWebsite)
   const updatedUser = await db.getUser(req.user.id) //retrieve the updated user info
   res.status(200).json({message: 'uploaded successfully', updatedUser})
 }
@@ -82,6 +122,9 @@ module.exports = {
   logoutPost,
   getAllPosts,
   contentPost,
-  uploadImagePost,
-  uploadImagePostNext
+  uploadImagePut,
+  uploadImagePutNext,
+  uploadImagePutError,
+  updateBioPut,
+  updateWebsitePut,
 }

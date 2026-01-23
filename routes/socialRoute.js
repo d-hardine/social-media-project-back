@@ -11,6 +11,8 @@ socialRouter.post('/logout', socialController.logoutPost)
 socialRouter.get('/all-posts', socialController.getAllPosts)
 socialRouter.post('/post', socialController.contentPost)
 
-socialRouter.post('/upload-image', socialController.uploadImagePost, socialController.uploadImagePostNext)
+socialRouter.put('/upload-image', socialController.uploadImagePut, socialController.uploadImagePutNext, socialController.uploadImagePutError)
+socialRouter.put('/update-bio', socialController.updateBioPut)
+socialRouter.put('/update-website', socialController.updateWebsitePut)
 
 module.exports = socialRouter
