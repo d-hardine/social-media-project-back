@@ -9,7 +9,10 @@ socialRouter.post('/login', socialController.loginPost, socialController.loginPo
 socialRouter.post('/logout', socialController.logoutPost)
 
 socialRouter.get('/all-posts', socialController.getAllPosts)
-socialRouter.post('/post', socialController.contentPost)
+socialRouter.get('/single-post/:statusId', socialController.getSinglePost)
+socialRouter.get('/comments/:statusId', socialController.getComments)
+socialRouter.post('/create-comment', socialController.commentPost)
+socialRouter.post('/create-post', socialController.contentPost)
 
 socialRouter.put('/upload-image', socialController.uploadImagePut, socialController.uploadImagePutNext, socialController.uploadImagePutError)
 socialRouter.put('/update-bio', socialController.updateBioPut)

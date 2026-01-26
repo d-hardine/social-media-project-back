@@ -14,15 +14,16 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  username   String   @unique
+  id         String    @id @default(uuid())
+  username   String    @unique
   name       String
   password   String
   bio        String?
   website    String?
-  profilePic String   @default("https://res.cloudinary.com/do1rucyzl/image/upload/v1769052594/placeholder-image_x8y4ld.png")
-  createdAt  DateTime @default(now())
+  profilePic String    @default("https://res.cloudinary.com/do1rucyzl/image/upload/v1769052594/placeholder-image_x8y4ld.png")
+  createdAt  DateTime  @default(now())
   posts      Post[]
+  comments   Comment[]
 }
 
 model Post {
@@ -30,6 +31,17 @@ model Post {
   content   String?
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+  createdAt DateTime @default(now())
+  comments Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  body      String
   createdAt DateTime @default(now())
 }
 

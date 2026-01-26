@@ -38,10 +38,35 @@ async function postContent(newPost, userId) {
   })
 }
 
+async function postComment(newComment, statusId, userId) {
+  return await prisma.comment.create({
+    data: {
+      authorId: userId,
+      body: newComment,
+      postId: statusId
+    }
+  })
+}
+
 async function retrieveAllPosts() {
   return await prisma.post.findMany({
     include: {author: true},
     orderBy: {createdAt: 'desc'}
+  })
+}
+
+async function retrieveSinglePost(statusId) {
+  return await prisma.post.findUnique({
+    where: {id: statusId},
+    include: {author: true},
+  })
+}
+
+async function retrieveComments(statusId) {
+  return await prisma.comment.findMany({
+    where: {postId: statusId},
+    include: {author: true},
+    orderBy: {createdAt: 'asc'}
   })
 }
 
@@ -72,4 +97,15 @@ async function updateUserWebsite(userId, newWebsite) {
   })  
 }
 
-module.exports = { getUser, createNewUser, postContent, retrieveAllPosts, updateUserImage, updateUserBio, updateUserWebsite }
+module.exports = {
+  getUser,
+  createNewUser,
+  postContent,
+  postComment,
+  retrieveAllPosts,
+  retrieveSinglePost,
+  retrieveComments,
+  updateUserImage,
+  updateUserBio,
+  updateUserWebsite
+}

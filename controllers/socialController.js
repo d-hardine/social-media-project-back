@@ -74,10 +74,26 @@ const getAllPosts = async (req, res) => {
   res.status(200).json({message: "All posts retrieved", allPosts})
 }
 
+const getSinglePost = async (req, res) => {
+  const singlePost = await db.retrieveSinglePost(req.params.statusId)
+  res.status(200).json({message: "single post retrieved", singlePost})
+}
+
+const getComments =  async (req, res) => {
+  const comments = await db.retrieveComments(req.params.statusId)
+  res.status(200).json({message: "comments retrieved", comments})
+}
+
+const commentPost = async (req, res) => {
+  const { newComment, postId } = req.body
+  await db.postComment(newComment, postId, req.user.id)
+  res.send('comment added')
+}
+
 const contentPost = async (req, res) => {
   const newPost = req.body.post
   await db.postContent(newPost, req.user.id)
-  res.status(200).json({message: "new post created"})
+  res.status(201).json({message: "new post created"})
 }
 
 //whole profile picture upload middleware 
@@ -121,6 +137,9 @@ module.exports = {
   authenticationGet,
   logoutPost,
   getAllPosts,
+  getSinglePost,
+  getComments,
+  commentPost,
   contentPost,
   uploadImagePut,
   uploadImagePutNext,
