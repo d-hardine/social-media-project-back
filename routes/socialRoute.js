@@ -14,6 +14,10 @@ socialRouter.get('/comments/:statusId', socialController.getComments)
 socialRouter.post('/create-comment', socialController.commentPost)
 socialRouter.post('/create-post', socialController.contentPost)
 
+socialRouter.get('/like/:statusId', socialController.retrieveLike)
+socialRouter.post('/like/:statusId', socialController.addLike)
+socialRouter.delete('/like/:statusId', socialController.deleteLike)
+
 socialRouter.put('/upload-image', socialController.uploadImagePut, socialController.uploadImagePutNext, socialController.uploadImagePutError)
 socialRouter.put('/update-bio', socialController.updateBioPut)
 socialRouter.put('/update-website', socialController.updateWebsitePut)

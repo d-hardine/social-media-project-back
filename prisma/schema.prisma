@@ -24,6 +24,7 @@ model User {
   createdAt  DateTime  @default(now())
   posts      Post[]
   comments   Comment[]
+  likes   Like[]
 }
 
 model Post {
@@ -33,6 +34,7 @@ model Post {
   authorId  String
   createdAt DateTime @default(now())
   comments Comment[]
+  likes Like[]
 }
 
 model Comment {
@@ -42,6 +44,15 @@ model Comment {
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
   body      String
+  createdAt DateTime @default(now())
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
 }
 

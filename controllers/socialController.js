@@ -130,6 +130,21 @@ const updateWebsitePut = async (req, res) => {
   res.status(200).json({message: 'uploaded successfully', updatedUser})
 }
 
+const retrieveLike = async (req, res) => {
+  const retrievedLike = await db.retrieveLike(req.params.statusId)
+  res.status(200).json({message: 'like data retrieved', retrievedLike})
+}
+
+const addLike = async (req, res) => {
+  await db.addLike(req.params.statusId, req.user.id)
+  res.send('like added')
+}
+
+const deleteLike = async (req, res) => {
+  await db.deleteLike(req.params.statusId, req.user.id)
+  res.send('like deleted successfully')
+}
+
 module.exports = {
   signUpPost,
   loginPost,
@@ -146,4 +161,7 @@ module.exports = {
   uploadImagePutError,
   updateBioPut,
   updateWebsitePut,
+  retrieveLike,
+  addLike,
+  deleteLike,
 }

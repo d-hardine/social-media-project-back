@@ -50,7 +50,7 @@ async function postComment(newComment, statusId, userId) {
 
 async function retrieveAllPosts() {
   return await prisma.post.findMany({
-    include: {author: true},
+    include: {author: true, comments: true},
     orderBy: {createdAt: 'desc'}
   })
 }
@@ -58,7 +58,7 @@ async function retrieveAllPosts() {
 async function retrieveSinglePost(statusId) {
   return await prisma.post.findUnique({
     where: {id: statusId},
-    include: {author: true},
+    include: {author: true, comments: true},
   })
 }
 
@@ -97,6 +97,32 @@ async function updateUserWebsite(userId, newWebsite) {
   })  
 }
 
+async function retrieveLike(postId) {
+  return await prisma.like.findMany({
+    where: {
+      postId: postId,
+    }
+  })
+}
+
+async function addLike(postId, userId) {
+  return await prisma.like.create({
+    data: {
+      postId: postId,
+      authorId: userId
+    }
+  })  
+}
+
+async function deleteLike(postId, userId) {
+  return await prisma.like.deleteMany({
+    where: {
+      postId: postId,
+      authorId: userId
+    }
+  })  
+}
+
 module.exports = {
   getUser,
   createNewUser,
@@ -107,5 +133,8 @@ module.exports = {
   retrieveComments,
   updateUserImage,
   updateUserBio,
-  updateUserWebsite
+  updateUserWebsite,
+  retrieveLike,
+  addLike,
+  deleteLike,
 }
