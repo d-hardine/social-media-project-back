@@ -145,6 +145,27 @@ const deleteLike = async (req, res) => {
   res.send('like deleted successfully')
 }
 
+const getAccount = async (req, res) => {
+  const retrievedAccount = await db.getAccount(req.params.accountId)
+  res.status(200).json({message: 'account data retrieved', retrievedAccount})
+}
+
+const retrieveFollow = async (req, res) => {
+  const retrievedFollowers = await db.retrieveFollowers(req.params.accountId)
+  const retrievedFollowing = await db.retrieveFollowing(req.params.accountId)
+  res.status(200).json({message: 'follow data retrieved', retrievedFollowers, retrievedFollowing})
+}
+
+const addFollow = async (req, res) => {
+  await db.addFollow(req.user.id, req.params.accountId)
+  res.send('follow added')
+}
+
+const deleteFollow = async (req, res) => {
+  await db.deleteFollow(req.user.id, req.params.accountId)
+  res.send('follow deleted')
+}
+
 module.exports = {
   signUpPost,
   loginPost,
@@ -164,4 +185,8 @@ module.exports = {
   retrieveLike,
   addLike,
   deleteLike,
+  getAccount,
+  retrieveFollow,
+  addFollow,
+  deleteFollow,
 }

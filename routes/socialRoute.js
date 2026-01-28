@@ -18,6 +18,12 @@ socialRouter.get('/like/:statusId', socialController.retrieveLike)
 socialRouter.post('/like/:statusId', socialController.addLike)
 socialRouter.delete('/like/:statusId', socialController.deleteLike)
 
+socialRouter.get('/account/:accountId', socialController.getAccount)
+
+socialRouter.get('/follow/:accountId', socialController.retrieveFollow)
+socialRouter.post('/follow/:accountId', socialController.addFollow)
+socialRouter.delete('/follow/:accountId', socialController.deleteFollow)
+
 socialRouter.put('/upload-image', socialController.uploadImagePut, socialController.uploadImagePutNext, socialController.uploadImagePutError)
 socialRouter.put('/update-bio', socialController.updateBioPut)
 socialRouter.put('/update-website', socialController.updateWebsitePut)

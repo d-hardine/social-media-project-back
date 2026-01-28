@@ -24,17 +24,19 @@ model User {
   createdAt  DateTime  @default(now())
   posts      Post[]
   comments   Comment[]
-  likes   Like[]
+  likes      Like[]
+  followedBy Follow[] @relation("followedBy")
+  following  Follow[] @relation("following")
 }
 
 model Post {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   content   String?
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User      @relation(fields: [authorId], references: [id])
   authorId  String
-  createdAt DateTime @default(now())
-  comments Comment[]
-  likes Like[]
+  createdAt DateTime  @default(now())
+  comments  Comment[]
+  likes     Like[]
 }
 
 model Comment {
@@ -54,6 +56,14 @@ model Like {
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
   createdAt DateTime @default(now())
+}
+
+model Follow {
+  id           String @id @default(uuid())
+  followedById String
+  followedBy   User   @relation("followedBy", fields: [followedById], references: [id])
+  followingId  String
+  following    User   @relation("following", fields: [followingId], references: [id])
 }
 
 model session {

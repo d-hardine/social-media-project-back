@@ -50,7 +50,17 @@ async function postComment(newComment, statusId, userId) {
 
 async function retrieveAllPosts() {
   return await prisma.post.findMany({
-    include: {author: true, comments: true},
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          profilePic: true,
+        }
+      },
+      comments: true
+    },
     orderBy: {createdAt: 'desc'}
   })
 }
@@ -58,7 +68,17 @@ async function retrieveAllPosts() {
 async function retrieveSinglePost(statusId) {
   return await prisma.post.findUnique({
     where: {id: statusId},
-    include: {author: true, comments: true},
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          profilePic: true,
+        }
+      },
+      comments: true
+    },
   })
 }
 
@@ -123,6 +143,49 @@ async function deleteLike(postId, userId) {
   })  
 }
 
+async function getAccount(accountId) {
+  return await prisma.user.findUnique({
+    where: {id: accountId},
+    select: {
+      name: true,
+      username: true,
+      profilePic: true,
+      bio: true,
+      website: true
+    }
+  })
+}
+
+async function retrieveFollowers(accountId) {
+  return await prisma.follow.findMany({
+    where: {followedById: accountId}
+  })
+}
+
+async function retrieveFollowing(accountId) {
+  return await prisma.follow.findMany({
+    where: {followingId: accountId}
+  })
+}
+
+async function addFollow(userId, accountId) {
+  return await prisma.follow.create({
+    data: {
+      followedById: accountId,
+      followingId: userId
+    }
+  })
+}
+
+async function deleteFollow(userId, accountId) {
+  return await prisma.follow.deleteMany({
+    where: {
+      followedById: accountId,
+      followingId: userId
+    }
+  })  
+}
+
 module.exports = {
   getUser,
   createNewUser,
@@ -137,4 +200,9 @@ module.exports = {
   retrieveLike,
   addLike,
   deleteLike,
+  getAccount,
+  retrieveFollowers,
+  retrieveFollowing,
+  addFollow,
+  deleteFollow,
 }
