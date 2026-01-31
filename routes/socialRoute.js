@@ -24,6 +24,8 @@ socialRouter.get('/follow/:accountId', socialController.retrieveFollow)
 socialRouter.post('/follow/:accountId', socialController.addFollow)
 socialRouter.delete('/follow/:accountId', socialController.deleteFollow)
 
+socialRouter.get('/latest-users', socialController.getAllLatestUsers)
+
 socialRouter.put('/upload-image', socialController.uploadImagePut, socialController.uploadImagePutNext, socialController.uploadImagePutError)
 socialRouter.put('/update-bio', socialController.updateBioPut)
 socialRouter.put('/update-website', socialController.updateWebsitePut)

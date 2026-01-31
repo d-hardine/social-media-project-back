@@ -186,6 +186,19 @@ async function deleteFollow(userId, accountId) {
   })  
 }
 
+async function getAllLatestUsers() {
+  return await prisma.user.findMany({
+    take: 3,
+    select: {
+      id: true,
+      name: true,
+      username: true,
+      profilePic: true,
+    },
+    orderBy:{createdAt: 'desc'}
+  })
+}
+
 module.exports = {
   getUser,
   createNewUser,
@@ -205,4 +218,5 @@ module.exports = {
   retrieveFollowing,
   addFollow,
   deleteFollow,
+  getAllLatestUsers,
 }

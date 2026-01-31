@@ -166,6 +166,11 @@ const deleteFollow = async (req, res) => {
   res.send('follow deleted')
 }
 
+const getAllLatestUsers =  async (req, res) => {
+  const latestUsers = await db.getAllLatestUsers()
+  res.status(200).json({message: 'like data retrieved', latestUsers})
+}
+
 module.exports = {
   signUpPost,
   loginPost,
@@ -189,4 +194,5 @@ module.exports = {
   retrieveFollow,
   addFollow,
   deleteFollow,
+  getAllLatestUsers,
 }
