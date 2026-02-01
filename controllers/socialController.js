@@ -74,6 +74,16 @@ const getAllPosts = async (req, res) => {
   res.status(200).json({message: "All posts retrieved", allPosts})
 }
 
+const getFollowingPosts = async (req, res) => {
+  const retrievedFollowing = await db.retrieveFollowing(req.user.id)
+  let retrievedFollowingArray = []
+  for(let i = 0; i < retrievedFollowing.length; i++) {
+    retrievedFollowingArray[i] = retrievedFollowing[i].followedById
+  }
+  const followingPosts = await db.retrieveFollowingPosts(retrievedFollowingArray)
+  res.status(200).json({message: "Followed posts retrieved", followingPosts})
+}
+
 const getSinglePost = async (req, res) => {
   const singlePost = await db.retrieveSinglePost(req.params.statusId)
   res.status(200).json({message: "single post retrieved", singlePost})
@@ -167,7 +177,7 @@ const deleteFollow = async (req, res) => {
 }
 
 const getAllLatestUsers =  async (req, res) => {
-  const latestUsers = await db.getAllLatestUsers()
+  const latestUsers = await db.getAllLatestUsers(req.user.id)
   res.status(200).json({message: 'like data retrieved', latestUsers})
 }
 
@@ -178,6 +188,7 @@ module.exports = {
   authenticationGet,
   logoutPost,
   getAllPosts,
+  getFollowingPosts,
   getSinglePost,
   getComments,
   commentPost,

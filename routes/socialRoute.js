@@ -9,6 +9,7 @@ socialRouter.post('/login', socialController.loginPost, socialController.loginPo
 socialRouter.post('/logout', socialController.logoutPost)
 
 socialRouter.get('/all-posts', socialController.getAllPosts)
+socialRouter.get('/following-posts/', socialController.getFollowingPosts)
 socialRouter.get('/single-post/:statusId', socialController.getSinglePost)
 socialRouter.get('/comments/:statusId', socialController.getComments)
 socialRouter.post('/create-comment', socialController.commentPost)
