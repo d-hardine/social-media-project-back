@@ -29,11 +29,12 @@ async function createNewUser(username, displayName, password) {
   })
 }
 
-async function postContent(newPost, userId) {
+async function postContent(newPost, userId, newImageUrl) {
   return await prisma.post.create({
     data: {
       authorId: userId,
-      content: newPost
+      content: newPost,
+      image: newImageUrl
     }
   })
 }

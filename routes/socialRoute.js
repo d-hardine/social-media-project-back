@@ -13,7 +13,7 @@ socialRouter.get('/following-posts/', socialController.getFollowingPosts)
 socialRouter.get('/single-post/:statusId', socialController.getSinglePost)
 socialRouter.get('/comments/:statusId', socialController.getComments)
 socialRouter.post('/create-comment', socialController.commentPost)
-socialRouter.post('/create-post', socialController.contentPost)
+socialRouter.post('/create-post', socialController.uploadImage, socialController.contentPost)
 
 socialRouter.get('/like/:statusId', socialController.retrieveLike)
 socialRouter.post('/like/:statusId', socialController.addLike)
@@ -27,7 +27,7 @@ socialRouter.delete('/follow/:accountId', socialController.deleteFollow)
 
 socialRouter.get('/latest-users', socialController.getAllLatestUsers)
 
-socialRouter.put('/upload-image', socialController.uploadImagePut, socialController.uploadImagePutNext, socialController.uploadImagePutError)
+socialRouter.put('/upload-image', socialController.uploadImage, socialController.uploadImagePutNext, socialController.uploadImagePutError)
 socialRouter.put('/update-bio', socialController.updateBioPut)
 socialRouter.put('/update-website', socialController.updateWebsitePut)
 

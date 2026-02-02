@@ -25,16 +25,17 @@ model User {
   posts      Post[]
   comments   Comment[]
   likes      Like[]
-  followedBy Follow[] @relation("followedBy")
-  following  Follow[] @relation("following")
+  followedBy Follow[]  @relation("followedBy")
+  following  Follow[]  @relation("following")
 }
 
 model Post {
   id        String    @id @default(uuid())
-  content   String?
+  content   String
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   createdAt DateTime  @default(now())
+  image     String?
   comments  Comment[]
   likes     Like[]
 }

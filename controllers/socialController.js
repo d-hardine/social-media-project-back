@@ -31,6 +31,9 @@ const upload = multer({
   fileFilter: fileFilter
 })
 
+//use this multer upload middleware to upload stuff
+const uploadImage = upload.single('image')
+
 
 const signUpPost = async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -100,14 +103,19 @@ const commentPost = async (req, res) => {
   res.send('comment added')
 }
 
-const contentPost = async (req, res) => {
-  const newPost = req.body.post
-  await db.postContent(newPost, req.user.id)
+const contentPost = async (req, res, next) => {
+  const { newPost } = req.body
+  if(req.file) { //if user uploading a file
+    const uploadToCloud = await cloudinary.uploader.upload(req.file.path) //upload to cloud
+    await db.postContent(newPost, req.user.id, uploadToCloud.secure_url)
+  } else {
+   await db.postContent(newPost, req.user.id)
+  }
+  //res.status(201).json({message: "new post created"})
   res.status(201).json({message: "new post created"})
 }
 
-//whole profile picture upload middleware 
-const uploadImagePut = upload.single('image')
+//whole profile picture upload middleware
 const uploadImagePutNext = async (req, res, next) => {
   const uploadToCloud = await cloudinary.uploader.upload(req.file.path) //upload to cloud
   await db.updateUserImage(req.user.id, uploadToCloud.secure_url) //update the user profile picture to database
@@ -193,7 +201,7 @@ module.exports = {
   getComments,
   commentPost,
   contentPost,
-  uploadImagePut,
+  uploadImage,
   uploadImagePutNext,
   uploadImagePutError,
   updateBioPut,
