@@ -84,7 +84,12 @@ const getFollowingPosts = async (req, res) => {
     retrievedFollowingArray[i] = retrievedFollowing[i].followedById
   }
   const followingPosts = await db.retrieveFollowingPosts(retrievedFollowingArray)
-  res.status(200).json({message: "Followed posts retrieved", followingPosts})
+  res.status(200).json({message: "Following posts retrieved", followingPosts})
+}
+
+const getAccountPosts = async (req, res) => {
+  const accountPosts = await db.retrieveAccountPosts(req.params.accountId)
+  res.status(200).json({message: "Account posts retrieved", accountPosts})
 }
 
 const getSinglePost = async (req, res) => {
@@ -197,6 +202,7 @@ module.exports = {
   logoutPost,
   getAllPosts,
   getFollowingPosts,
+  getAccountPosts,
   getSinglePost,
   getComments,
   commentPost,

@@ -84,6 +84,24 @@ async function retrieveFollowingPosts(followingArray) {
   })
 }
 
+async function retrieveAccountPosts(accountId) {
+  return await prisma.post.findMany({
+    where: {authorId: accountId},
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          profilePic: true,
+        }
+      },
+      comments: true
+    },
+    orderBy: {createdAt: 'desc'}
+  })
+}
+
 async function retrieveSinglePost(statusId) {
   return await prisma.post.findUnique({
     where: {id: statusId},
@@ -226,6 +244,7 @@ module.exports = {
   postComment,
   retrieveAllPosts,
   retrieveFollowingPosts,
+  retrieveAccountPosts,
   retrieveSinglePost,
   retrieveComments,
   updateUserImage,
