@@ -84,6 +84,13 @@ const loginPostSuccess = (req, res) => {
   res.status(201).json(req.user)
 }
 
+//login middlewares google oauth strategy
+const loginGoogle = passport.authenticate('google', { scope: ['profile'] }) //handled by passport library
+const loginGoogleCallback = passport.authenticate('google', { failureRedirect: '/login'})
+const loginGoogleSuccess = (req, res) => {
+  res.redirect('http://localhost:5173/home')
+}
+
 //login middlewares github oauth strategy
 const loginGithub = passport.authenticate('github', { scope: ['user:email'] }) //handled by passport library
 const loginGithubCallback = passport.authenticate('github', { failureRedirect: '/login'})
@@ -246,6 +253,9 @@ module.exports = {
   loginGithub,
   loginGithubCallback,
   loginGithubSuccess,
+  loginGoogle,
+  loginGoogleCallback,
+  loginGoogleSuccess,
   authenticationGet,
   logoutPost,
   getAllPosts,
