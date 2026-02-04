@@ -13,6 +13,12 @@ findUsername()
   })
 */
 
+async function duplicateUsernameSearch(inputtedUsername) {
+  return await prisma.user.findUnique({
+    where: {username: inputtedUsername}
+  })
+}
+
 async function getUser(userId) {
   return await prisma.user.findUnique({
     where: {id: userId}
@@ -238,6 +244,7 @@ async function getAllLatestUsers(userId) {
 }
 
 module.exports = {
+  duplicateUsernameSearch,
   getUser,
   createNewUser,
   postContent,

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs')
 const db = require('../db/queries')
 const passport = require('passport')
 const cloudinary = require('cloudinary').v2
+const { body, validationResult } = require('express-validator')
 
 //multer setup
 const path = require('node:path')
@@ -14,7 +15,7 @@ const storage = multer.diskStorage({
 })
 const fileFilter = (req, file, cb) => { //filter that only image file that can be uploaded
   // Check file types (mimetype) and extensions
-  const allowedTypes = /jpeg|jpg|png/;
+  const allowedTypes = /jpeg|jpg|png|webp/;
   const mimetype = allowedTypes.test(file.mimetype);
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
@@ -34,11 +35,47 @@ const upload = multer({
 //use this multer upload middleware to upload stuff
 const uploadImage = upload.single('image')
 
-
-const signUpPost = async (req, res) => {
-  const hashedPassword = await bcrypt.hash(req.body.password, 10)
-  await db.createNewUser(req.body.username, req.body.displayName, hashedPassword)
-  res.status(201).json({message: "inputted data for sign up OK"})
+//signup middlewares
+const validateSignUp = [
+  body('username')
+    .trim()
+    .notEmpty().withMessage('Username field must not be empty.')
+    .isLength({min: 3, max: 15}).withMessage(`Username must be between 3 and 15 characters.`)
+    .custom(async (inputtedUsername) => {
+      const duplicateUsername = await db.duplicateUsernameSearch(inputtedUsername)
+        if(duplicateUsername) {
+          throw new Error('Username has been used, pick another one.')
+        }
+    }),
+  body('displayName')
+    .notEmpty().withMessage('Display Name field must not be empty.')
+    .isLength({min: 3, max: 15}).withMessage(`Display Name must be between 3 and 15 characters.`),
+    body('password').isStrongPassword({ //it needs at least 5 conditions written to make it work, which is stupid
+      minLength: 8,
+      minLowercase: 0,
+      minUppercase: 0,
+      minNumbers: 1,
+      minSymbols: 0
+    }).withMessage(`Password must be at least 8 characters, with numbers and letters.`),
+  body('confirmPassword').custom((confirmedPasswordvalue, {req}) => {
+    return confirmedPasswordvalue === req.body.password
+    }).withMessage("Password and confirm password doesn't match.")
+]
+const signUpPost = async (req, res, next) => {
+  try {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+      res.status(400).json({errors: errors.array()})
+    } else {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10)
+      await db.createNewUser(req.body.username, req.body.displayName, hashedPassword)
+      res.status(201).json({message: "inputted data for sign up OK"})
+      next()
+    }
+  } catch(err) {
+    res.send(err)
+    return next(err)
+  }
 }
 
 //login middlewares
@@ -195,6 +232,7 @@ const getAllLatestUsers =  async (req, res) => {
 }
 
 module.exports = {
+  validateSignUp,
   signUpPost,
   loginPost,
   loginPostSuccess,

@@ -4,7 +4,7 @@ const socialController = require('../controllers/socialController')
 const socialRouter = Router()
 
 socialRouter.get('/auth', socialController.authenticationGet)
-socialRouter.post('/signup', socialController.signUpPost)
+socialRouter.post('/signup', socialController.validateSignUp, socialController.signUpPost)
 socialRouter.post('/login', socialController.loginPost, socialController.loginPostSuccess)
 socialRouter.post('/logout', socialController.logoutPost)
 
