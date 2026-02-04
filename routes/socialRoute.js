@@ -6,6 +6,8 @@ const socialRouter = Router()
 socialRouter.get('/auth', socialController.authenticationGet)
 socialRouter.post('/signup', socialController.validateSignUp, socialController.signUpPost)
 socialRouter.post('/login', socialController.loginPost, socialController.loginPostSuccess)
+socialRouter.get('/auth/github', socialController.loginGithub)
+socialRouter.get('/auth/github/callback', socialController.loginGithubCallback, socialController.loginGithubSuccess)
 socialRouter.post('/logout', socialController.logoutPost)
 
 socialRouter.get('/all-posts', socialController.getAllPosts)

@@ -78,10 +78,17 @@ const signUpPost = async (req, res, next) => {
   }
 }
 
-//login middlewares
+//login middlewares local strategy
 const loginPost = passport.authenticate('local', {failureRedirect: '/', failureMessage: true}) //handled by passport library
 const loginPostSuccess = (req, res) => {
   res.status(201).json(req.user)
+}
+
+//login middlewares github oauth strategy
+const loginGithub = passport.authenticate('github', { scope: ['user:email'] }) //handled by passport library
+const loginGithubCallback = passport.authenticate('github', { failureRedirect: '/login'})
+const loginGithubSuccess = (req, res) => {
+  res.redirect('http://localhost:5173/home')
 }
 
 const authenticationGet = async (req, res) => {
@@ -236,6 +243,9 @@ module.exports = {
   signUpPost,
   loginPost,
   loginPostSuccess,
+  loginGithub,
+  loginGithubCallback,
+  loginGithubSuccess,
   authenticationGet,
   logoutPost,
   getAllPosts,
