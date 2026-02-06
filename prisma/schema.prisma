@@ -27,6 +27,8 @@ model User {
   likes      Like[]
   followedBy Follow[]  @relation("followedBy")
   following  Follow[]  @relation("following")
+  sender     Message[] @relation("sender")
+  recipient  Message[] @relation("receiver")
 }
 
 model Post {
@@ -65,6 +67,17 @@ model Follow {
   followedBy   User   @relation("followedBy", fields: [followedById], references: [id])
   followingId  String
   following    User   @relation("following", fields: [followingId], references: [id])
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  isRead     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  senderId   String
+  sender     User     @relation("sender", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
+  body       String
 }
 
 model session {

@@ -38,5 +38,8 @@ socialRouter.get('/latest-users', socialController.getAllLatestUsers)
 socialRouter.put('/upload-image', socialController.uploadImage, socialController.uploadImagePutNext, socialController.uploadImagePutError)
 socialRouter.put('/update-bio', socialController.updateBioPut)
 socialRouter.put('/update-website', socialController.updateWebsitePut)
+socialRouter.put('/update-display-name', socialController.updateDisplayedNamePut)
+
+socialRouter.post('/message/:accountId', socialController.postPrivateMessage)
 
 module.exports = socialRouter

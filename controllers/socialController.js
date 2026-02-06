@@ -204,6 +204,13 @@ const updateWebsitePut = async (req, res) => {
   res.status(200).json({message: 'uploaded successfully', updatedUser})
 }
 
+const updateDisplayedNamePut = async (req, res) => {
+  const { newDisplayName } = req.body
+  await db.updateUserDisplayedName(req.user.id, newDisplayName)
+  const updatedUser = await db.getUser(req.user.id) //retrieve the updated user info
+  res.status(200).json({message: 'uploaded successfully', updatedUser})
+}
+
 const retrieveLike = async (req, res) => {
   const retrievedLike = await db.retrieveLike(req.params.statusId)
   res.status(200).json({message: 'like data retrieved', retrievedLike})
@@ -245,6 +252,12 @@ const getAllLatestUsers =  async (req, res) => {
   res.status(200).json({message: 'like data retrieved', latestUsers})
 }
 
+const postPrivateMessage = async (req, res) => {
+  const { newMessage } = req.body
+  await db.postPrivateMessage(newMessage, req.user.id, req.params.accountId)
+  res.send('private message sent')
+}
+
 module.exports = {
   validateSignUp,
   signUpPost,
@@ -270,6 +283,7 @@ module.exports = {
   uploadImagePutError,
   updateBioPut,
   updateWebsitePut,
+  updateDisplayedNamePut,
   retrieveLike,
   addLike,
   deleteLike,
@@ -278,4 +292,5 @@ module.exports = {
   addFollow,
   deleteFollow,
   getAllLatestUsers,
+  postPrivateMessage,
 }

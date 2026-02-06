@@ -160,6 +160,15 @@ async function updateUserWebsite(userId, newWebsite) {
   })  
 }
 
+async function updateUserDisplayedName(userId, newDisplayedName) {
+  return await prisma.user.update({
+    where: {id: userId},
+    data: {
+      name: newDisplayedName
+    }
+  })  
+}
+
 async function retrieveLike(postId) {
   return await prisma.like.findMany({
     where: {
@@ -243,6 +252,16 @@ async function getAllLatestUsers(userId) {
   })
 }
 
+async function postPrivateMessage(newMessage, accountId, userId) {
+  return await prisma.message.create({
+    data: {
+      senderId: userId,
+      receiverId: accountId,
+      body: newMessage
+    }
+  })
+}
+
 module.exports = {
   duplicateUsernameSearch,
   getUser,
@@ -257,6 +276,7 @@ module.exports = {
   updateUserImage,
   updateUserBio,
   updateUserWebsite,
+  updateUserDisplayedName,
   retrieveLike,
   addLike,
   deleteLike,
@@ -266,4 +286,5 @@ module.exports = {
   addFollow,
   deleteFollow,
   getAllLatestUsers,
+  postPrivateMessage,
 }
