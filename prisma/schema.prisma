@@ -14,21 +14,21 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  username   String    @unique
-  name       String
-  password   String
-  bio        String?
-  website    String?
-  profilePic String    @default("https://res.cloudinary.com/do1rucyzl/image/upload/v1769052594/placeholder-image_x8y4ld.png")
-  createdAt  DateTime  @default(now())
-  posts      Post[]
-  comments   Comment[]
-  likes      Like[]
-  followedBy Follow[]  @relation("followedBy")
-  following  Follow[]  @relation("following")
-  sender     Message[] @relation("sender")
-  recipient  Message[] @relation("receiver")
+  id            String                @id @default(uuid())
+  username      String                @unique
+  name          String
+  password      String
+  bio           String?
+  website       String?
+  profilePic    String                @default("https://res.cloudinary.com/do1rucyzl/image/upload/v1769052594/placeholder-image_x8y4ld.png")
+  createdAt     DateTime              @default(now())
+  posts         Post[]
+  comments      Comment[]
+  likes         Like[]
+  followedBy    Follow[]              @relation("followedBy")
+  following     Follow[]              @relation("following")
+  messageSender Messages[]
+  conversations ConversationMembers[]
 }
 
 model Post {
@@ -69,15 +69,34 @@ model Follow {
   following    User   @relation("following", fields: [followingId], references: [id])
 }
 
-model Message {
-  id         String   @id @default(uuid())
-  isRead     Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  senderId   String
-  sender     User     @relation("sender", fields: [senderId], references: [id])
-  receiverId String
-  receiver   User     @relation("receiver", fields: [receiverId], references: [id])
-  body       String
+model Conversation {
+  id                   String                @id @default(uuid())
+  name                 String?
+  isGroup              Boolean               @default(false)
+  createdAt            DateTime              @default(now())
+  members              ConversationMembers[]
+  conversationMessages Messages[]
+}
+
+model ConversationMembers {
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@id([userId, conversationId]) // Composite primary key
+}
+
+model Messages {
+  id             String       @id @default(uuid())
+  content        String
+  createdAt      DateTime     @default(now())
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@index([conversationId, createdAt])
 }
 
 model session {

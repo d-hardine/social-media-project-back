@@ -249,13 +249,40 @@ const deleteFollow = async (req, res) => {
 
 const getAllLatestUsers =  async (req, res) => {
   const latestUsers = await db.getAllLatestUsers(req.user.id)
-  res.status(200).json({message: 'like data retrieved', latestUsers})
+  res.status(200).json({message: 'latest users retrieved', latestUsers})
 }
 
-const postPrivateMessage = async (req, res) => {
-  const { newMessage } = req.body
-  await db.postPrivateMessage(newMessage, req.user.id, req.params.accountId)
-  res.send('private message sent')
+const getConversations = async (req, res) => {
+  const retrievedConversations = await db.retrieveConversations(req.user.id)
+  res.status(200).json({message: 'conversations retrieved', retrievedConversations})
+}
+
+const getMessages = async (req, res) => {
+  const retrievedMessages = await db.retrieveMessages(req.params.conversationId)
+  res.status(200).json({message: 'messages retrieved', retrievedMessages})
+}
+
+const getConversationMembers = async (req, res) => {
+  const retrievedConversationMembers = await db.retrieveConversationMembers(req.params.conversationId, req.user.id)
+  res.status(200).json({message: 'conversation members retrieved', retrievedConversationMembers})
+}
+
+const chat = async (req, res) => {
+  const {accountId} = req.body
+
+  try {
+    // 1. Find a conversation that has BOTH users
+    const existingConversation = await db.fetchExistingConversation(req.user.id, accountId)
+    if (existingConversation) {
+      return res.json(existingConversation)
+    }
+
+    // 2. Create new conversation if it doesn't exist
+    const newConversation = await db. newConversation(req.user.id, accountId)
+    res.json(newConversation)
+  } catch (error) {
+      res.status(500).json({ error: "Could not start chat" });
+  }
 }
 
 module.exports = {
@@ -292,5 +319,8 @@ module.exports = {
   addFollow,
   deleteFollow,
   getAllLatestUsers,
-  postPrivateMessage,
+  getConversations,
+  getMessages,
+  getConversationMembers,
+  chat,
 }

@@ -1,16 +1,24 @@
 const express = require('express')
+const http = require('http')
+const { Server } = require('socket.io')
 const session = require('express-session')
 const cors = require('cors')
 const socialRouter = require('./routes/socialRoute')
 const pool = require('./db/pool')
 const passport = require('passport')
 const pgSession = require('connect-pg-simple')(session)
+const db = require('./db/queries')
 
 // Load environment variables
 require('dotenv').config()
 
-//express initialization
+//express and socket.io initialization
 const app = express()
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors: 'http://localhost:5173',
+  methods: ['GET', 'POST'],
+})
 
 //cors setting
 const corsOptions = {
@@ -59,11 +67,38 @@ app.use('/api', socialRouter)
 // Need to require the entire Passport library module so index.js knows about it
 require('./lib/passport');
 
+//socket stuff
+io.on('connection', (socket) => {
+  console.log(socket.id + " connected")
+
+  // Client calls this as soon as they open the chat UI
+  socket.on('join_chat', (conversationId) => {
+    socket.join(conversationId)
+  })
+
+  socket.on('send_message', async (data) => {
+    const { conversationId, senderId, content } = data
+
+    try {
+      await db.newMessage(conversationId, senderId, content) // Save to Postgres via Prisma
+      const newMessages = await db.retrieveMessages(conversationId) // Ferch updated messages
+
+      io.to(conversationId).emit('new_message', { newMessages }) //Broadcast to everyone in the room
+    } catch (err) {
+      console.error("Message save error:", err)
+    }
+  })
+
+  socket.on('disconnect', () => {
+    console.log(socket.id + ' disconnected')
+  })
+})
+
 const PORT = 3000;
 
-app.listen(PORT, (error) => {
+server.listen(PORT, (error) => {
   if (error) {
     throw error;
   }
-  console.log(`Express app started at port ${PORT}!`);
+  console.log(`Express and socket io app started at port ${PORT}!`);
 })

@@ -166,7 +166,7 @@ async function updateUserDisplayedName(userId, newDisplayedName) {
     data: {
       name: newDisplayedName
     }
-  })  
+  })
 }
 
 async function retrieveLike(postId) {
@@ -183,7 +183,7 @@ async function addLike(postId, userId) {
       postId: postId,
       authorId: userId
     }
-  })  
+  })
 }
 
 async function deleteLike(postId, userId) {
@@ -192,7 +192,7 @@ async function deleteLike(postId, userId) {
       postId: postId,
       authorId: userId
     }
-  })  
+  })
 }
 
 async function getAccount(accountId) {
@@ -235,7 +235,7 @@ async function deleteFollow(userId, accountId) {
       followedById: accountId,
       followingId: userId
     }
-  })  
+  })
 }
 
 async function getAllLatestUsers(userId) {
@@ -252,13 +252,68 @@ async function getAllLatestUsers(userId) {
   })
 }
 
-async function postPrivateMessage(newMessage, accountId, userId) {
-  return await prisma.message.create({
-    data: {
-      senderId: userId,
-      receiverId: accountId,
-      body: newMessage
+async function retrieveConversations(userId) {
+  return await prisma.conversation.findMany({
+    where: { members: {some: {userId: userId}} },
+    include: {
+      members: {
+        where: {
+          userId: {not: userId} //exclude the logged in user duh
+        },
+        include: {user: {select: {name: true, username: true, profilePic: true}}}
+      }
     }
+  })
+}
+
+async function retrieveMessages(conversationId) {
+  return await prisma.messages.findMany({
+    where: { conversationId },
+    include: {sender: {select: {name: true, username: true, profilePic: true}}}
+  })
+}
+
+async function retrieveConversationMembers(conversationId, userId) {
+  return await prisma.conversationMembers.findMany({
+    where: {conversationId, userId: {not: userId}},
+    include: {user: {select: {name: true, username: true, profilePic: true}}}
+  })
+}
+
+async function newMessage(conversationId, senderId, content) {
+  return await prisma.messages.create({
+    data: {
+      conversationId,
+      senderId,
+      content
+    },
+    include: { sender: { select: { username: true } } } // Include sender info for UI 
+  })  
+}
+
+async function fetchExistingConversation(senderId, receiverId) {
+  return await prisma.conversation.findFirst({
+    where: {
+      AND: [
+        { members: { some: { userId: senderId } } },
+        { members: { some: { userId: receiverId } } },
+      ],
+    },
+    include: { members: true }
+  })
+}
+
+async function newConversation(senderId, receiverId) {
+  return await prisma.conversation.create({
+    data: {
+      members: {
+        create: [
+          { userId: senderId },
+          { userId: receiverId }
+        ]
+      }
+    },
+    include: { members: true }
   })
 }
 
@@ -286,5 +341,10 @@ module.exports = {
   addFollow,
   deleteFollow,
   getAllLatestUsers,
-  postPrivateMessage,
+  retrieveConversations,
+  retrieveMessages,
+  retrieveConversationMembers,
+  newMessage,
+  fetchExistingConversation,
+  newConversation,
 }

@@ -40,6 +40,9 @@ socialRouter.put('/update-bio', socialController.updateBioPut)
 socialRouter.put('/update-website', socialController.updateWebsitePut)
 socialRouter.put('/update-display-name', socialController.updateDisplayedNamePut)
 
-socialRouter.post('/message/:accountId', socialController.postPrivateMessage)
+socialRouter.get('/conversations/:userId', socialController.getConversations)
+socialRouter.get('/messages/:conversationId', socialController.getMessages)
+socialRouter.get('/conversation-members/:conversationId', socialController.getConversationMembers)
+socialRouter.post('/chat', socialController.chat)
 
 module.exports = socialRouter
