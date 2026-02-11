@@ -274,12 +274,12 @@ const chat = async (req, res) => {
     // 1. Find a conversation that has BOTH users
     const existingConversation = await db.fetchExistingConversation(req.user.id, accountId)
     if (existingConversation) {
-      return res.json(existingConversation)
+      return res.json({message: 'conversation already exist', conversationId: existingConversation})
     }
 
     // 2. Create new conversation if it doesn't exist
     const newConversation = await db. newConversation(req.user.id, accountId)
-    res.json(newConversation)
+    res.json({message: 'new conversation created', conversationId: newConversation})
   } catch (error) {
       res.status(500).json({ error: "Could not start chat" });
   }

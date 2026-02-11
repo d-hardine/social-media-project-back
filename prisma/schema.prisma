@@ -74,6 +74,7 @@ model Conversation {
   name                 String?
   isGroup              Boolean               @default(false)
   createdAt            DateTime              @default(now())
+  lastMessage          String                @default("new chat")
   members              ConversationMembers[]
   conversationMessages Messages[]
 }

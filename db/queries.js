@@ -288,7 +288,14 @@ async function newMessage(conversationId, senderId, content) {
       content
     },
     include: { sender: { select: { username: true } } } // Include sender info for UI 
-  })  
+  })
+}
+
+async function updateLastMessageConversation(conversationId, content) {
+  return await prisma.conversation.update({
+    where: {id: conversationId},
+    data: {lastMessage: content}
+  })
 }
 
 async function fetchExistingConversation(senderId, receiverId) {
@@ -345,6 +352,7 @@ module.exports = {
   retrieveMessages,
   retrieveConversationMembers,
   newMessage,
+  updateLastMessageConversation,
   fetchExistingConversation,
   newConversation,
 }
