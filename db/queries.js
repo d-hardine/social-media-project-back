@@ -262,7 +262,8 @@ async function retrieveConversations(userId) {
         },
         include: {user: {select: {name: true, username: true, profilePic: true}}}
       }
-    }
+    },
+    orderBy: {updatedAt: 'desc'}
   })
 }
 
