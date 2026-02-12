@@ -12,17 +12,20 @@ const db = require('./db/queries')
 // Load environment variables
 require('dotenv').config()
 
+// frontend url/the react app url
+const frontUrl = process.env.FRONT_URL || 'http://localhost:5173'
+
 //express and socket.io initialization
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: 'http://localhost:5173',
+  cors: frontUrl,
   methods: ['GET', 'POST'],
 })
 
 //cors setting
 const corsOptions = {
-  origin: 'http://localhost:5173', // Replace with your React app's URL
+  origin: frontUrl, // Replace with your React app's URL
   credentials: true, // This allows the browser to send/receive cookies
   optionsSuccessStatus: 200,
 };

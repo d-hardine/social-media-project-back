@@ -3,6 +3,9 @@ const db = require('../db/queries')
 const passport = require('passport')
 const cloudinary = require('cloudinary').v2
 const { body, validationResult } = require('express-validator')
+require('dotenv').config()
+
+const frontUrl = process.env.FRONT_URL || 'http://localhost:5173'
 
 //multer setup
 const path = require('node:path')
@@ -88,14 +91,14 @@ const loginPostSuccess = (req, res) => {
 const loginGoogle = passport.authenticate('google', { scope: ['profile'] }) //handled by passport library
 const loginGoogleCallback = passport.authenticate('google', { failureRedirect: '/login'})
 const loginGoogleSuccess = (req, res) => {
-  res.redirect('http://localhost:5173/home')
+  res.redirect(`${frontUrl}/home`)
 }
 
 //login middlewares github oauth strategy
 const loginGithub = passport.authenticate('github', { scope: ['user:email'] }) //handled by passport library
 const loginGithubCallback = passport.authenticate('github', { failureRedirect: '/login'})
 const loginGithubSuccess = (req, res) => {
-  res.redirect('http://localhost:5173/home')
+  res.redirect(`${frontUrl}/home`)
 }
 
 const authenticationGet = async (req, res) => {
