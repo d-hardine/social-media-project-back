@@ -64,6 +64,11 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
+//home directory initialization
+app.get('/', (req, res) => {
+  res.status(200).send('OK')
+})
+
 //routes middleware
 app.use('/api', socialRouter)
 
