@@ -14,6 +14,7 @@ require('dotenv').config()
 
 // frontend url/the react app url
 const frontUrl = process.env.FRONT_URL || 'http://localhost:5173'
+const DEV_MODE = process.env.DEV_MODE
 
 //express and socket.io initialization
 const app = express()
@@ -55,8 +56,8 @@ app.use(session({
   cookie: {
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
     httpOnly: true, //for security, prevents JS access
-    secure: false, //change to true in production
-    sameSite: 'lax',
+    secure: DEV_MODE ? false : true,
+    sameSite: DEV_MODE ? 'lax' : 'none',
   }
 }))
 
@@ -105,7 +106,7 @@ io.on('connection', (socket) => {
 
 const PORT = 3000;
 
-server.listen(PORT, '0.0.0.0', (error) => {
+server.listen(PORT, DEV_MODE ? "http://localhost" : '0.0.0.0', (error) => {
   if (error) {
     throw error;
   }
