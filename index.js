@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
 
 const PORT = 3000;
 
-server.listen(PORT, (error) => {
+server.listen(PORT, '0.0.0.0', (error) => {
   if (error) {
     throw error;
   }
