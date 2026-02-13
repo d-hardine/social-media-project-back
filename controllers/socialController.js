@@ -102,7 +102,6 @@ const loginGithubSuccess = (req, res) => {
 }
 
 const authenticationGet = async (req, res) => {
-  console.log(req.isAuthenticated())
   if(req.isAuthenticated()) {
     res.status(201).json(req.user)
   } else {
