@@ -38,6 +38,8 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
+app.set('trust proxy', 1); // Allows Express trusts header from proxy, or in this case, my frontend
+
 //initializing cloudinary
 require('./lib/cloudinary')
 
