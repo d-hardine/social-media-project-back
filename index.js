@@ -49,7 +49,7 @@ const sessionStore = new pgSession({
 
 //setting up session and store it to postgres db
 app.use(session({
-  secret: 'el-poco-loco',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
@@ -106,7 +106,7 @@ io.on('connection', (socket) => {
 
 const PORT = 3000;
 
-server.listen(PORT, DEV_MODE ? "http://localhost" : '0.0.0.0', (error) => {
+server.listen(PORT, DEV_MODE ? "127.0.0.1" : '0.0.0.0', (error) => {
   if (error) {
     throw error;
   }
