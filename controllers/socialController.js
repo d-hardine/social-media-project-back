@@ -98,7 +98,13 @@ const loginGoogleSuccess = (req, res) => {
 const loginGithub = passport.authenticate('github', { scope: ['user:email'] }) //handled by passport library
 const loginGithubCallback = passport.authenticate('github', { failureRedirect: '/login'})
 const loginGithubSuccess = (req, res) => {
-  res.redirect(`${frontUrl}/home`)
+  req.session.save((err) => { //force save to session before redirect
+    if (err) {
+      console.error("Session save error:", err)
+      return res.redirect(`${frontUrl}/home`)
+    }
+    res.redirect(`${frontUrl}/home`)
+  })
 }
 
 const authenticationGet = async (req, res) => {
