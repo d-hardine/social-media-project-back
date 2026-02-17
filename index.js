@@ -29,7 +29,9 @@ const corsOptions = {
   origin: frontUrl, // Replace with your React app's URL
   credentials: true, // This allows the browser to send/receive cookies
   optionsSuccessStatus: 200,
-};
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}
 
 //cors enabled accordance to setting
 app.use(cors(corsOptions))
