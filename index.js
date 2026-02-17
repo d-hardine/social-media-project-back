@@ -57,6 +57,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
+  proxy: true,
   cookie: {
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
     httpOnly: true, //for security, prevents JS access
