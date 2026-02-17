@@ -87,13 +87,15 @@ io.on('connection', (socket) => {
     socket.join(conversationId)
   })
 
-  socket.on('send_message', async (data) => {
+  socket.on('send_message', async (data, callback) => {
     const { conversationId, senderId, content } = data
 
     try {
       await db.newMessage(conversationId, senderId, content) // Save the new message to Postgres via Prisma
       const newMessages = await db.retrieveMessages(conversationId) // Fetch updated messages
       await db.updateLastMessageConversation(conversationId, content) // Update the last Message in the Conversation
+
+      callback(newMessages)
 
       io.to(conversationId).emit('new_message', { newMessages }) //Broadcast to everyone in the room
     } catch (err) {

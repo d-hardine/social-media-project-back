@@ -270,7 +270,8 @@ async function retrieveConversations(userId) {
 async function retrieveMessages(conversationId) {
   return await prisma.messages.findMany({
     where: { conversationId },
-    include: {sender: {select: {name: true, username: true, profilePic: true}}}
+    include: {sender: {select: {name: true, username: true, profilePic: true}}},
+    orderBy: {createdAt: 'asc'}
   })
 }
 
