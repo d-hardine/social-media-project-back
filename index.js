@@ -14,6 +14,8 @@ require('dotenv').config()
 
 // frontend url/the react app url
 const frontUrl = process.env.FRONT_URL || 'http://localhost:5173'
+// backend url
+const backUrl = process.env.BACK_URL || 'http://localhost:3000'
 const DEV_MODE = process.env.DEV_MODE
 
 //express and socket.io initialization
@@ -58,6 +60,7 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore,
   proxy: true,
+  domain: backUrl,
   cookie: {
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
     httpOnly: true, //for security, prevents JS access
