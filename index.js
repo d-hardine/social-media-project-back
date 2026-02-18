@@ -59,6 +59,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   store: sessionStore,
+  partitioned: true, //for OAuth login, because the cookie will be from different source
   proxy: true,
   cookie: {
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
