@@ -101,7 +101,7 @@ const loginGithubSuccess = (req, res) => {
   req.session.save((err) => { //force save to session before redirect
     if (err) {
       console.error("Session save error:", err)
-      return res.redirect(`${frontUrl}/home`)
+      return res.redirect(`${frontUrl}/login`)
     }
     res.redirect(`${frontUrl}/home`)
   })
