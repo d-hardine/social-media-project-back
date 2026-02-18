@@ -60,7 +60,6 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore,
   proxy: true,
-  domain: backUrl,
   cookie: {
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
     httpOnly: true, //for security, prevents JS access
