@@ -64,8 +64,7 @@ app.use(session({
     maxAge: 1000 /*1 sec*/ * 60 /*1 minute*/ * 60 /*1 hour*/ * 24 /*1 day*/ * 7, //equals 1 week
     httpOnly: true, //for security, prevents JS access
     secure: DEV_MODE ? false : true,
-    sameSite: DEV_MODE ? 'lax' : 'none',
-    partitioned: DEV_MODE ? false : true, //for OAuth login, because the cookie will be from different source
+    sameSite: 'lax',
   }
 }))
 
