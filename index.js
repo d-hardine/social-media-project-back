@@ -68,15 +68,6 @@ app.use(session({
   }
 }))
 
-//To make sure the browser won't block incoming cookies
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Origin', 'https://hardine-book.netlify.app');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-  next();
-});
-
 //enable passport middleware to use session
 app.use(passport.initialize())
 app.use(passport.session())
