@@ -21,8 +21,11 @@ const DEV_MODE = process.env.DEV_MODE
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
-  cors: frontUrl,
-  methods: ['GET', 'POST'],
+  cors: {
+    origin: frontUrl,
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 })
 
 //cors setting
